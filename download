@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+!*.example
+*.secret
+state/
+*.sqlite3*
+*.lock
+!requirements.lock
+*.log

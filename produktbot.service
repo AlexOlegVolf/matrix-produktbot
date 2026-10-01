@@ -1,0 +1,31 @@
+[Unit]
+Description=Matrix Produktbot mit n8n Webhook
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=produktbot
+Group=produktbot
+WorkingDirectory=/opt/produktbot
+EnvironmentFile=/etc/produktbot/config.env
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/produktbot/.venv/bin/python /opt/produktbot/bot.py --homeserver ${MATRIX_HOMESERVER} --bot-user ${MATRIX_BOT_USER} --allowed-server ${MATRIX_ALLOWED_SERVER} --webhook-url ${N8N_WEBHOOK_URL} --matrix-token-file /etc/produktbot/matrix-token.secret --webhook-key-file /etc/produktbot/webhook-key.secret --state-dir /var/lib/produktbot
+StateDirectory=produktbot
+StateDirectoryMode=0700
+UMask=0077
+Restart=on-failure
+RestartSec=15
+TimeoutStopSec=20
+KillSignal=SIGINT
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target
